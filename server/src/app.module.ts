@@ -4,10 +4,7 @@ import { User } from "./users/entities/user.entity";
 import { Follow } from "./users/entities/follow.entity";
 import { Murmur } from "./murmurs/entities/murmur.entity";
 import { Like } from "./murmurs/entities/like.entity";
-// Import Modules (We will create these files next)
 import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
-import { MurmursModule } from "./murmurs/murmurs.module";
 
 @Module({
   imports: [
@@ -22,8 +19,8 @@ import { MurmursModule } from "./murmurs/murmurs.module";
       synchronize: true, // Auto-creates tables based on entities for development
     }),
     AuthModule,
-    UsersModule,
-    MurmursModule,
+    // UsersModule,
+    // MurmursModule,
   ],
 })
 export class AppModule {}
