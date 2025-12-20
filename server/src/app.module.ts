@@ -18,7 +18,7 @@ import { MurmursModule } from "./murmurs/murmurs.module";
       password: "docker",
       database: "test",
       entities: [User, Follow, Murmur, Like],
-      synchronize: true, // Auto-creates tables based on entities for development
+      synchronize: true,
     }),
     AuthModule,
     UsersModule,

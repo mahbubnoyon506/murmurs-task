@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { Follow } from "./entities/follow.entity";
 
@@ -60,5 +60,49 @@ export class UsersService {
     });
     await this.followRepository.save(follow);
     return { following: true };
+  }
+
+  async getAllUsers(currentUserId: number) {
+    return this.userRepository.find({
+      where: { id: Not(currentUserId) }, // Exclude self
+      select: ["id", "username"], // Only send necessary data
+    });
+  }
+
+  // Get users following a specific person
+  async getFollowers(userId: number) {
+    const follows = await this.followRepository.find({
+      where: { following: { id: userId } },
+      relations: ["follower"],
+    });
+    return follows.map((f) => f.follower);
+  }
+
+  // Get users that a specific person is following
+  async getFollowing(userId: number) {
+    const follows = await this.followRepository.find({
+      where: { follower: { id: userId } },
+      relations: ["following"],
+    });
+    return follows.map((f) => f.following);
+  }
+
+  // Updated All Users with "isFollowed" status for the Discover page
+  async getAllUsersWithStatus(currentUserId: number) {
+    const users = await this.userRepository.find({
+      where: { id: Not(currentUserId) },
+    });
+
+    const myFollowing = await this.followRepository.find({
+      where: { follower: { id: currentUserId } },
+      relations: ["following"],
+    });
+
+    const followingIds = myFollowing.map((f) => f.following.id);
+
+    return users.map((user) => ({
+      ...user,
+      isFollowed: followingIds.includes(user.id),
+    }));
   }
 }

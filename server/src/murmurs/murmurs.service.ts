@@ -39,6 +39,20 @@ export class MurmursService {
     };
   }
 
+  async findOne(id: number) {
+    // Requirement: Fetch single murmur with user and likes data
+    const murmur = await this.murmurRepository.findOne({
+      where: { id },
+      relations: ["user", "likes"],
+    });
+
+    if (!murmur) {
+      throw new NotFoundException(`Murmur with ID ${id} not found`);
+    }
+
+    return murmur;
+  }
+
   // Requirement: Post murmur
   async create(userId: number, text: string) {
     const murmur = this.murmurRepository.create({

@@ -9,15 +9,15 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), // Registers User entity for this module
+    TypeOrmModule.forFeature([User]),
     PassportModule,
     JwtModule.register({
-      secret: "8f2c3da5f5211f26e970699da9c6deaa", // Use environment variables in production
-      signOptions: { expiresIn: "1h" },
+      secret: "8f2c3da5f5211f26e970699da9c6deaa",
+      signOptions: { expiresIn: "12h" },
     }),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService], // Exported in case other modules need auth logic
+  exports: [AuthService],
 })
 export class AuthModule {}

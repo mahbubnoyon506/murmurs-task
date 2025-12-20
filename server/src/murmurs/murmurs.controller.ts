@@ -23,6 +23,12 @@ export class MurmursController {
     return this.murmursService.getTimeline(parseInt(page) || 1);
   }
 
+  @Get("/murmurs/:id")
+  // Requirement: Public or protected access to single murmur detail
+  getOne(@Param("id") id: string) {
+    return this.murmursService.findOne(+id);
+  }
+
   // [POST] /api/me/murmurs/
   @UseGuards(JwtAuthGuard)
   @Post("me/murmurs")
