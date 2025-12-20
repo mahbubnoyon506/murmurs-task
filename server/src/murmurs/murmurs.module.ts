@@ -1,0 +1,13 @@
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { MurmursService } from "./murmurs.service";
+import { MurmursController } from "./murmurs.controller";
+import { Murmur } from "./entities/murmur.entity";
+import { Like } from "./entities/like.entity";
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Murmur, Like])],
+  providers: [MurmursService],
+  controllers: [MurmursController],
+})
+export class MurmursModule {}
