@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import api from '../../services/api'
 import { UserCheck } from 'lucide-react'
 import { useFollowing } from '../../hooks/useFollowers'
 

@@ -54,11 +54,8 @@ export default function MurmurDetail() {
                 : 'hover:bg-gray-100 text-gray-500'
             }`}
           >
-            <Heart
-              className={`w-6 h-6 ${murmur.isLiked ? 'fill-current' : ''}`}
-            />
             <span className="font-bold text-lg">
-              {murmur.likes?.length || 0}
+              ❤️ {murmur.likes?.length || 0}
             </span>
           </button>
         </div>

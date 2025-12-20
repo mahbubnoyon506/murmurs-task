@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '../services/api'
@@ -6,11 +6,13 @@ import { User, Users, Trash2, Calendar } from 'lucide-react'
 import FollowingList from '../components/users/FollowingList'
 import FollowersList from '../components/users/FollowersList'
 
+import FollowUnfollow from '../components/FollowUnfollow'
+
 export default function Profile() {
+  const navigate = useNavigate()
   const { id } = useParams()
   const queryClient = useQueryClient()
-  const { profileQuery, followMutation } = useProfile(id)
-
+  const { profileQuery } = useProfile(id)
   const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}')
   const isOwnProfile = loggedInUser.id === Number(id)
 
@@ -32,7 +34,7 @@ export default function Profile() {
     <div className="max-w-2xl mx-auto p-4">
       {/* Header Section */}
       <div className="bg-white border border-gray-400 rounded-xl p-6 mb-6 shadow-sm">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="bg-gray-200 p-4 rounded-full">
               <User className="w-12 h-12 text-gray-600" />
@@ -46,14 +48,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {!isOwnProfile && (
-            <button
-              onClick={() => followMutation.mutate(user.id)}
-              className="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-gray-800 transition-colors"
-            >
-              {followMutation.isPending ? '...' : 'Follow'}
-            </button>
-          )}
+          {!isOwnProfile && <FollowUnfollow userId={user.id} />}
         </div>
 
         {/* Stats Section */}
@@ -72,23 +67,28 @@ export default function Profile() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-4">
           <h2 className="text-xl font-bold px-2">Murmurs</h2>
-          {user.murmurs?.map((murmur: any) => (
-            <div key={murmur.id}>
-              <Link to={`/murmurs/${murmur.id}`}>
-                <div className="bg-white border border-gray-400  rounded-xl p-4 shadow-sm flex justify-between items-start">
+          {user.murmurs.length
+            ? user.murmurs?.map((murmur: any) => (
+                <div
+                  key={murmur.id}
+                  className="bg-white border border-gray-400  rounded-xl p-4 shadow-sm flex justify-between items-start cursor-pointer"
+                  onClick={() => navigate(`/murmurs/${murmur.id}`)}
+                >
                   <p className="text-gray-800">{murmur.text}</p>
                   {isOwnProfile && (
                     <button
-                      onClick={() => deleteMutation.mutate(murmur.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteMutation.mutate(murmur.id)
+                      }}
                       className="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   )}
                 </div>
-              </Link>
-            </div>
-          ))}
+              ))
+            : null}
         </div>
 
         <div className="space-y-4 md:mt-7">

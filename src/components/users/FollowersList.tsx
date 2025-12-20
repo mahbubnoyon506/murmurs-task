@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import api from '../../services/api'
-import { UserCheck, UserPlus } from 'lucide-react'
+import { UserPlus } from 'lucide-react'
 import { useFollowers } from '../../hooks/useFollowers'
 
 export default function FollowersList({
