@@ -1,29 +1,37 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Layout from './components/layout/Layout'
+import Timeline from './pages/Timeline'
+import Profile from './pages/Profile'
+import Auth from './pages/Auth'
+import Discover from './pages/Discover'
+import MurmurDetail from './pages/MurmurDetail'
 
-function App() {
-  const [data, setData] = useState<any>(null)
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.post('/api/postTest')
-        console.log(res.data)
-        setData(res.data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
-    
-    fetchData()
-  }, [])
-
-  return (
-    <div>
-      <h1>Display the data obtained from API here</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  )
+// Protected Route Guard
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+  const isAuthenticated = !!localStorage.getItem('token')
+  return isAuthenticated ? children : <Navigate to="/auth" />
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Timeline />} />
+          <Route path="discover" element={<Discover />} />
+          <Route path="profile/:id" element={<Profile />} />
+          <Route path="murmurs/:id" element={<MurmurDetail />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
