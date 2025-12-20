@@ -19,7 +19,7 @@ export const useMurmurs = (page: number = 1) => {
       const { data } = await api.post(`/murmurs/${murmurId}/like`)
       return data
     },
-    // INSTANT UI UPDATE (Optimistic Update)
+
     onMutate: async (murmurId) => {
       await queryClient.cancelQueries({ queryKey: ['murmurs'] })
       const previousData = queryClient.getQueryData(['murmurs', page])
@@ -60,12 +60,12 @@ export const useCreateMurmur = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    // Requirement: Post murmur
+    //Post murmur
     mutationFn: async (text: string) => {
       const { data } = await api.post('/me/murmurs', { text })
       return data
     },
-    // Optimistic Update: Add to the top of the timeline instantly
+    // Add to the top of the timeline instantly
     onMutate: async (newText) => {
       await queryClient.cancelQueries({ queryKey: ['murmurs'] })
       const previousMurmurs = queryClient.getQueryData(['murmurs', 1])

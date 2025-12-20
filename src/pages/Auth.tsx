@@ -38,6 +38,7 @@ export default function Auth() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <input
+              required
               type="text"
               placeholder="Username"
               className="w-full p-2 border rounded"
@@ -47,6 +48,7 @@ export default function Auth() {
             />
           )}
           <input
+            required
             type="email"
             placeholder="Email"
             className="w-full p-2 border rounded"
@@ -55,6 +57,7 @@ export default function Auth() {
             }
           />
           <input
+            required
             type="password"
             placeholder="Password"
             className="w-full p-2 border rounded"

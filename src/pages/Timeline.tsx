@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useMurmurs } from '../hooks/useMurmurs'
 import CreateMurmur from '../components/murmurs/CreateMurmur'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Timeline() {
+  const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const { timelineQuery, likeMutation } = useMurmurs(page)
 
@@ -17,19 +18,24 @@ export default function Timeline() {
 
       <div className="space-y-4">
         {timelineQuery.data?.data.map((murmur: any) => (
-          <div className="p-4 border border-gray-400  rounded-lg shadow-sm bg-white">
-            <Link key={murmur.id} to={`/murmurs/${murmur.id}`}>
-              <p className="text-gray-800">{murmur.text}</p>
-              <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
-                <span>By {murmur.user.username}</span>
-                <button
-                  onClick={() => likeMutation.mutate(murmur.id)}
-                  className={`px-3 py-1 rounded ${murmur.isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100'}`}
-                >
-                  ❤️ {murmur.likes?.length || 0}
-                </button>
-              </div>
-            </Link>
+          <div
+            key={murmur.id}
+            className="p-4 border border-gray-400  rounded-lg shadow-sm bg-white cursor-pointer"
+            onClick={() => navigate(`/murmurs/${murmur.id}`)}
+          >
+            <p className="text-gray-800">{murmur.text}</p>
+            <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
+              <span>By {murmur.user.username}</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  likeMutation.mutate(murmur.id)
+                }}
+                className={`px-3 py-1 rounded ${murmur.isLiked ? 'bg-red-100 text-red-600' : 'bg-gray-100'}`}
+              >
+                ❤️ {murmur.likes?.length || 0}
+              </button>
+            </div>
           </div>
         ))}
       </div>

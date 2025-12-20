@@ -22,7 +22,7 @@ export default function CreateMurmur() {
             <MessageSquare className="w-5 h-5 text-blue-600" />
           </div>
           <textarea
-            className="w-full p-2 text-lg border-none focus:none resize-none placeholder-gray-400"
+            className="w-full p-2 text-lg border-none focus:outline-none resize-none placeholder-gray-400"
             placeholder="What's on your mind?"
             rows={3}
             value={text}

@@ -27,3 +27,12 @@ export const useProfile = (userId: string | undefined) => {
 
   return { profileQuery, followMutation }
 }
+
+export const useAllUsers = () =>
+  useQuery({
+    queryKey: ['all-users'],
+    queryFn: async () => {
+      const { data } = await api.get('/users/all')
+      return data
+    },
+  })
